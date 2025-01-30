@@ -13,24 +13,23 @@ BACKGROUND_COLOR = (30, 30, 30)
 CARD_BACK_COLOR = (100, 100, 255)  # Blue for the back of the cards
 FPS = 30
 
-# Path to images (Make sure 1.png to 8.png are in the same directory as the script)
-IMAGE_PATH = "./images"  # This is the folder where the images should be placed
+# Path to images
+IMAGE_PATH = "./images"
 
 # Setup the screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Image Matching Game")
 font = pygame.font.SysFont("Arial", 40)
 
-# Load the images
+# Load images
 def load_images():
     images = []
     for i in range(1, 9):
         img = pygame.image.load(os.path.join(IMAGE_PATH, f"{i}.png"))
-        img = pygame.transform.scale(img, CARD_SIZE)  # Scale image to fit card size
+        img = pygame.transform.scale(img, CARD_SIZE)
         images.append(img)
     return images
 
-# Helper Functions
 def draw_text(text, font, color, surface, x, y):
     label = font.render(text, True, color)
     surface.blit(label, (x, y))
@@ -42,7 +41,6 @@ def draw_card(card, surface):
         pygame.draw.rect(surface, CARD_BACK_COLOR, card["rect"])  # Draw solid blue card
         draw_text("?", font, (255, 255, 255), surface, card["rect"].centerx - 15, card["rect"].centery - 20)
 
-# Game Class
 class Game:
     def __init__(self, images):
         self.cards = []
@@ -53,11 +51,9 @@ class Game:
         self.generate_cards(images)
 
     def generate_cards(self, images):
-        # Create a list of 8 pairs of images
         image_list = images * 2
         random.shuffle(image_list)
 
-        # Create card objects
         for i in range(4):
             for j in range(4):
                 img = image_list.pop()
@@ -74,13 +70,12 @@ class Game:
             if card1["image"] == card2["image"]:
                 self.matched_pairs += 1
             else:
-                pygame.time.wait(500)  # Wait for half a second to show the mismatch
+                pygame.time.wait(500)
                 card1["revealed"] = False
                 card2["revealed"] = False
             self.selected_cards = []
 
     def draw(self, surface):
-        # Draw background
         surface.fill(BACKGROUND_COLOR)
 
         # Draw cards
@@ -91,11 +86,11 @@ class Game:
         elapsed_time = round(time.time() - self.start_time, 2)
         draw_text(f"Time: {elapsed_time}s", font, (255, 255, 255), surface, 20, 20)
 
-        # Check if all pairs are matched
+        # Check if pairs are matched
         if self.matched_pairs == 8:
             draw_text("You Win!", font, (0, 255, 0), surface, WIDTH // 2 - 100, HEIGHT // 2 - 20)
 
-# Main Game Loop
+# Main Loop
 def main():
     clock = pygame.time.Clock()
 
